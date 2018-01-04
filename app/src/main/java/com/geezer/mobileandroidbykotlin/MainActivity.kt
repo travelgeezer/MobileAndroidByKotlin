@@ -24,9 +24,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-//        SimpleServiceMiddleware
-//                .responseDataFormat("call SImpleServiceMiddleware")
-//                .subscribe { sample_text.text = it?.data }
+        SimpleServiceMiddleware
+                .responseDataFormat("call SImpleServiceMiddleware")
+                .subscribe { sample_text.text = it?.data }
     }
 
 

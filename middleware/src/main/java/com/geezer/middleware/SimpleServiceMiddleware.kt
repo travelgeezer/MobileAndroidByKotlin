@@ -15,15 +15,35 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SimpleServiceMiddleware {
 
     companion object {
-        private fun _contributor(owner: String, repo: String): List<Contributor>? {
-            val retrofit = Retrofit.Builder()
+
+        private val retrofit: Retrofit by lazy {
+            Retrofit.Builder()
                     .baseUrl(SimpleService.API_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-            val github = retrofit.create(SimpleService.GitHub::class.java)
+        }
+
+        private val github: SimpleService.GitHub by lazy {
+            retrofit.create(SimpleService.GitHub::class.java)
+        }
+
+
+        private val retrofit2 by lazy {
+            Retrofit.Builder()
+                    .baseUrl(SimpleService.SERVICE_BY_FLASK_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+        }
+
+        private val serviceByFlask by lazy {
+            retrofit2.create(SimpleService.ServiceByFlask::class.java)
+        }
+
+        private fun _contributor(owner: String, repo: String): List<Contributor>? {
             val call = github.contributors(owner, repo)
             return call.execute().body()
         }
+
 
         fun contributor(owner: String, repo: String): Flowable<List<Contributor>?> {
             return Flowable.fromCallable({ SimpleServiceMiddleware._contributor(owner, repo) })
@@ -31,12 +51,8 @@ class SimpleServiceMiddleware {
                     .observeOn(AndroidSchedulers.mainThread())
         }
 
+
         private fun _responseDataFormat(data: String): JSONModel<String>? {
-            val retrofit = Retrofit.Builder()
-                    .baseUrl(SimpleService.SERVICE_BY_FLASK_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-            val serviceByFlask = retrofit.create(SimpleService.ServiceByFlask::class.java)
             val call = serviceByFlask.responseDataFormat(data)
             return call.execute().body()
         }
