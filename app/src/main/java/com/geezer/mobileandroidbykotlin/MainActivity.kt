@@ -36,6 +36,22 @@ class MainActivity : AppCompatActivity() {
                         Log.d("MainActivity", "login: ${it.login}  contributors: ${it.contributor}")
                     })
                 })
+
+
+        Flowable.fromCallable({
+            val retrofit = Retrofit.Builder()
+                    .baseUrl(SimpleService.SERVICE_BY_FLASK_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+            val serviceByFlask = retrofit.create(SimpleService.ServiceByFlask::class.java)
+            val call = serviceByFlask.responseDataFormat("call responseDataFormat request")
+            call.execute().body()
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    sample_text.text = it?.data
+                })
     }
 
 
