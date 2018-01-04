@@ -1,6 +1,7 @@
-package com.geezer.mobileandroidbykotlin.service
+package com.geezer.networkservice
 
-import com.geezer.mobileandroidbykotlin.models.BaseModel
+import com.geezer.githubmodels.Contributor
+import com.geezer.servicebyflaskmodels.JSONModel
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -17,9 +18,6 @@ class SimpleService {
     }
 
 
-    data class Contributor(val login: String, val contributor: Int)
-
-
     interface GitHub {
         @GET("/repos/{owner}/{repo}/contributors")
         fun contributors(
@@ -29,6 +27,6 @@ class SimpleService {
 
     interface ServiceByFlask {
         @GET("/api/v1/response_data_format/{data}")
-        fun responseDataFormat(@Path("data") data: String): Call<BaseModel<String>>
+        fun responseDataFormat(@Path("data") data: String): Call<JSONModel<String>>
     }
 }
