@@ -8,6 +8,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.Callable
 
 /**
  * Created by geezer. on 04/01/2018.
@@ -39,28 +40,27 @@ class SimpleServiceMiddleware {
             retrofit2.create(SimpleService.ServiceByFlask::class.java)
         }
 
-        private fun _contributor(owner: String, repo: String): List<Contributor>? {
-            val call = github.contributors(owner, repo)
-            return call.execute().body()
-        }
-
 
         fun contributor(owner: String, repo: String): Flowable<List<Contributor>?> {
-            return Flowable.fromCallable({ SimpleServiceMiddleware._contributor(owner, repo) })
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-        }
-
-
-        private fun _responseDataFormat(data: String): JSONModel<String>? {
-            val call = serviceByFlask.responseDataFormat(data)
-            return call.execute().body()
+            return rx(Callable {
+                val call = github.contributors(owner, repo)
+                call.execute().body()
+            })
         }
 
         fun responseDataFormat(data: String): Flowable<JSONModel<String>?> {
-            return Flowable.fromCallable { SimpleServiceMiddleware._responseDataFormat(data) }
+            return rx(Callable {
+                val call = serviceByFlask.responseDataFormat(data)
+                call.execute().body()
+            })
+        }
+
+
+        private fun <T> rx(callable: Callable<T>): Flowable<T> {
+            return Flowable.fromCallable(callable)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
         }
     }
+
 }
