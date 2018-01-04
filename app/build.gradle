@@ -44,8 +44,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
-    compile 'com.google.guava:guava:23.6-android'
+    implementation 'com.google.guava:guava:23.6-android'
     implementation project(':middleware')
-    implementation project(':githubmodels')
-    implementation project(':servicebyflaskmodels')
 }
