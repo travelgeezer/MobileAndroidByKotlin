@@ -23,7 +23,7 @@ class ServiceByFlaskMiddlewareHelper {
         }
 
         private fun <T> filterJSONModel(model: JSONModel<T>): T {
-            if (model.code == model.STATUS_CODE_SUCCESS) {
+            if (model.isSuccessful) {
                 return model.data
             }
             throw resultErrorHandle(model.code)
