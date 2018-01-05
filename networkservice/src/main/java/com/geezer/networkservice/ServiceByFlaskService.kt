@@ -13,7 +13,7 @@ import retrofit2.http.Path
 class ServiceByFlaskService {
 
     enum class ResultCode(val code: Int) {
-        SUCCESS(0)
+        SUCCESS(200)
     }
 
 

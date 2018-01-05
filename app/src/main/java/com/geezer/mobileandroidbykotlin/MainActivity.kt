@@ -3,8 +3,9 @@ package com.geezer.mobileandroidbykotlin
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.geezer.middleware.network.GithubMiddleware
-import com.geezer.middleware.network.ServiceByFlaskMiddleware
+import com.geezer.middleware.network.github.GithubMiddleware
+import com.geezer.middleware.network.servicebykotlin.ServiceByFlaskMiddlewareHelper
+import com.geezer.middleware.network.servicebykotlin.ServiceByFlaskMiddleware
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +30,12 @@ class MainActivity : AppCompatActivity() {
             ServiceByFlaskMiddleware
                     .responseDataFormat("call SImpleServiceMiddleware")
                     .subscribe({ sample_text.text = it },
-                            { sample_text.text = it.message })
+                            {
+                                it.printStackTrace()
+                                val handleError = ServiceByFlaskMiddlewareHelper.handleError(it)
+                                sample_text.text = "handleError.code: ${handleError.code}\n handleError.description: ${handleError.description} \n handleError.message: ${handleError.message}\n"
+                            })
+
         }
 
     }

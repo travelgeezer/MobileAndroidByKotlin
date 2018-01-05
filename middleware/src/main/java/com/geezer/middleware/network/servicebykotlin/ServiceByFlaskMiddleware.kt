@@ -1,4 +1,4 @@
-package com.geezer.middleware.network
+package com.geezer.middleware.network.servicebykotlin
 
 import com.geezer.networkservice.ServiceByFlaskService
 import com.geezer.servicebyflaskmodels.JSONModel
@@ -12,7 +12,10 @@ import java.util.concurrent.Callable
  */
 
 class ServiceByFlaskMiddleware {
+
+
     companion object {
+        private val TAG = "ServiceByFlask"
 
         private val serviceByFlask by lazy {
             ServiceByFlaskService.serviceByFlask
@@ -25,21 +28,12 @@ class ServiceByFlaskMiddleware {
             })
         }
 
-        class ResultException(message: String) : Exception(message)
-
-        private fun <T> filterResultCode(model: JSONModel<T>?): T {
-            return when (model?.code) {
-                ServiceByFlaskService.ResultCode.SUCCESS.code -> model.data
-                else -> throw ResultException(model?.info ?: "Unexpected response: $model")
-            }
-        }
 
         private fun <T> rx(callable: Callable<JSONModel<T>?>): Flowable<T> {
             return Flowable.fromCallable(callable)
-                    .map { filterResultCode(it) }
+                    .map { ServiceByFlaskMiddlewareHelper.filterResultCode(it) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-
         }
     }
 }

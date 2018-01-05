@@ -1,4 +1,4 @@
-package com.geezer.middleware.network
+package com.geezer.middleware.network.github
 
 import com.geezer.githubmodels.Contributor
 import com.geezer.networkservice.GitHubService
