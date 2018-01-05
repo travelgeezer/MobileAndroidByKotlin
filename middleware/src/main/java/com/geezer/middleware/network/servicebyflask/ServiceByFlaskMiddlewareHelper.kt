@@ -1,4 +1,4 @@
-package com.geezer.middleware.network.servicebykotlin
+package com.geezer.middleware.network.servicebyflask
 
 import com.geezer.networkservice.ServiceByFlaskService
 import com.geezer.servicebyflaskmodels.JSONModel

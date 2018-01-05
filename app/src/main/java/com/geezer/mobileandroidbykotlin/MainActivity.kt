@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.geezer.middleware.network.github.GithubMiddleware
-import com.geezer.middleware.network.servicebykotlin.ServiceByFlaskMiddlewareHelper
-import com.geezer.middleware.network.servicebykotlin.ServiceByFlaskMiddleware
+import com.geezer.middleware.network.servicebyflask.ServiceByFlaskMiddlewareHelper
+import com.geezer.middleware.network.servicebyflask.ServiceByFlaskMiddleware
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
