@@ -1,8 +1,7 @@
-package com.geezer.middleware
+package com.geezer.middleware.network
 
-import com.geezer.githubmodels.Contributor
+import com.geezer.networkservice.ServiceByFlaskService
 import com.geezer.servicebyflaskmodels.JSONModel
-import com.geezer.networkservice.SimpleService
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -11,42 +10,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Callable
 
 /**
- * Created by geezer. on 04/01/2018.
+ * Created by geezer. on 05/01/2018.
  */
-class SimpleServiceMiddleware {
 
+class ServiceByFlaskMiddleware {
     companion object {
-
-        private val retrofit: Retrofit by lazy {
+        private val retrofit by lazy {
             Retrofit.Builder()
-                    .baseUrl(SimpleService.API_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-        }
-
-        private val github: SimpleService.GitHub by lazy {
-            retrofit.create(SimpleService.GitHub::class.java)
-        }
-
-
-        private val retrofit2 by lazy {
-            Retrofit.Builder()
-                    .baseUrl(SimpleService.SERVICE_BY_FLASK_URL)
+                    .baseUrl(ServiceByFlaskService.SERVICE_BY_FLASK_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
         }
 
         private val serviceByFlask by lazy {
-            retrofit2.create(SimpleService.ServiceByFlask::class.java)
+            retrofit.create(ServiceByFlaskService.ServiceByFlask::class.java)
         }
 
-
-        fun contributor(owner: String, repo: String): Flowable<List<Contributor>?> {
-            return rx(Callable {
-                val call = github.contributors(owner, repo)
-                call.execute().body()
-            })
-        }
 
         fun responseDataFormat(data: String): Flowable<JSONModel<String>?> {
             return rx(Callable {
@@ -62,5 +41,4 @@ class SimpleServiceMiddleware {
                     .observeOn(AndroidSchedulers.mainThread())
         }
     }
-
 }

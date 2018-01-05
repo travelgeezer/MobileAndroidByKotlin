@@ -3,7 +3,8 @@ package com.geezer.mobileandroidbykotlin
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.geezer.middleware.SimpleServiceMiddleware
+import com.geezer.middleware.network.GithubMiddleware
+import com.geezer.middleware.network.ServiceByFlaskMiddleware
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         sample_text.text = stringFromJNI()
 
 
-        SimpleServiceMiddleware
+        GithubMiddleware
                 .contributor("square", "retrofit")
                 .subscribe {
                     it?.forEach {
@@ -24,9 +25,21 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-        SimpleServiceMiddleware
-                .responseDataFormat("call SImpleServiceMiddleware")
-                .subscribe { sample_text.text = it?.data }
+        sample_text.setOnClickListener {
+            ServiceByFlaskMiddleware
+                    .responseDataFormat("call SImpleServiceMiddleware")
+                    .subscribe {
+                        when (it?.code) {
+                            200 -> {
+                                sample_text.text = it.data
+                            }
+                            else -> {
+                                sample_text.text = it?.info
+                            }
+                        }
+                    }
+        }
+
     }
 
 
