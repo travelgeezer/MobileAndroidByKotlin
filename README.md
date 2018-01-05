@@ -2,7 +2,8 @@
 
 # TODO
 
-- Fix dependence issue
+- ~Fix dependence issue~
+- Added network request error handing
 - Added http service
 - Added register
 - Added login
