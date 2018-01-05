@@ -8,6 +8,7 @@ enum class HttpError(val code: Int, val description: String) {
     NETWORK_ERROR(-2, "network error"),
     PARSE_ERROR(-3, "parse error"),
     UNKNOWN_ERROR(-4, "unknown error"),
+
     SERVER_ERROR(500, "server error"),
     TIME_ERROR(504, "time out"),
     SERVER_UNAVAILABLE(503, " Service Unavailable"),

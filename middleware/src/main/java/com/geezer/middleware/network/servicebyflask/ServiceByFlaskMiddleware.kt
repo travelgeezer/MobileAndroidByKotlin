@@ -5,6 +5,7 @@ import com.geezer.servicebyflaskmodels.JSONModel
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import retrofit2.Response
 import java.util.concurrent.Callable
 
 /**
@@ -24,14 +25,14 @@ class ServiceByFlaskMiddleware {
         fun responseDataFormat(data: String): Flowable<String> {
             return rx(Callable {
                 val call = serviceByFlask.responseDataFormat(data)
-                call.execute().body()
+                call.execute()
             })
         }
 
 
-        private fun <T> rx(callable: Callable<JSONModel<T>?>): Flowable<T> {
+        private fun <T> rx(callable: Callable<Response<JSONModel<T>>>): Flowable<T> {
             return Flowable.fromCallable(callable)
-                    .map { ServiceByFlaskMiddlewareHelper.filterResultCode(it) }
+                    .map { ServiceByFlaskMiddlewareHelper.filterResponse(it) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
         }

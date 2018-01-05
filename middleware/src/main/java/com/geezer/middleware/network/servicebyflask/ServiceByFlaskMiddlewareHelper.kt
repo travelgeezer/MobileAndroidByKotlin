@@ -1,8 +1,9 @@
 package com.geezer.middleware.network.servicebyflask
 
-import com.geezer.networkservice.ServiceByFlaskService
 import com.geezer.servicebyflaskmodels.JSONModel
 import com.google.gson.JsonSyntaxException
+import retrofit2.Response
+import java.net.SocketTimeoutException
 
 /**
  * Created by geezer. on 05/01/2018.
@@ -21,9 +22,28 @@ class ServiceByFlaskMiddlewareHelper {
             }
         }
 
+        private fun <T> filterJSONModel(model: JSONModel<T>): T {
+            if (model.code == model.STATUS_CODE_SUCCESS) {
+                return model.data
+            }
+            throw resultErrorHandle(model.code)
+        }
+
+        fun <T> filterResponse(response: Response<JSONModel<T>>): T {
+            if (response.isSuccessful) {
+                return filterJSONModel(response.body()!!)
+            }
+            throw ServiceByFlaskMiddlewareHelper.resultErrorHandle(response.code())
+        }
+
         fun handleError(error: Throwable): HttpError {
             return when (error) {
-                is ResultException -> error.httpError
+
+                is SocketTimeoutException -> {
+                    val timeOut = HttpError.TIME_ERROR
+                    timeOut.message = error.message ?: ""
+                    timeOut
+                }
 
                 is JsonSyntaxException -> {
                     val parseError = HttpError.PARSE_ERROR
@@ -33,14 +53,9 @@ class ServiceByFlaskMiddlewareHelper {
 
                 is NullPointerException -> HttpError.NOT_FOUND
 
-                else -> HttpError.UNKNOWN_ERROR
-            }
-        }
+                is ResultException -> error.httpError
 
-        fun <T> filterResultCode(model: JSONModel<T>?): T {
-            return when (model?.code) {
-                ServiceByFlaskService.ResultCode.SUCCESS.code -> model.data
-                else -> throw resultErrorHandle(model?.code)
+                else -> HttpError.UNKNOWN_ERROR
             }
         }
     }
