@@ -2,6 +2,8 @@ package com.geezer.networkservice
 
 import com.geezer.servicebyflaskmodels.JSONModel
 import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -11,6 +13,18 @@ import retrofit2.http.Path
 class ServiceByFlaskService {
     companion object {
         val SERVICE_BY_FLASK_URL = "http://10.0.2.2:5000"
+
+        private val retrofit by lazy {
+            Retrofit.Builder()
+                    .baseUrl(ServiceByFlaskService.SERVICE_BY_FLASK_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+        }
+
+        val serviceByFlask by lazy {
+            retrofit.create(ServiceByFlaskService.ServiceByFlask::class.java)
+        }
+
     }
 
     interface ServiceByFlask {

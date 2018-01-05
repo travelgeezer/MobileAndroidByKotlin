@@ -5,8 +5,6 @@ import com.geezer.servicebyflaskmodels.JSONModel
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Callable
 
 /**
@@ -15,17 +13,10 @@ import java.util.concurrent.Callable
 
 class ServiceByFlaskMiddleware {
     companion object {
-        private val retrofit by lazy {
-            Retrofit.Builder()
-                    .baseUrl(ServiceByFlaskService.SERVICE_BY_FLASK_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-        }
 
         private val serviceByFlask by lazy {
-            retrofit.create(ServiceByFlaskService.ServiceByFlask::class.java)
+            ServiceByFlaskService.serviceByFlask
         }
-
 
         fun responseDataFormat(data: String): Flowable<JSONModel<String>?> {
             return rx(Callable {

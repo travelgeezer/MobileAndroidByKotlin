@@ -5,8 +5,6 @@ import com.geezer.networkservice.GitHubService
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Callable
 
 /**
@@ -15,15 +13,9 @@ import java.util.concurrent.Callable
 
 class GithubMiddleware {
     companion object {
-        private val retrofit: Retrofit by lazy {
-            Retrofit.Builder()
-                    .baseUrl(GitHubService.API_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-        }
 
-        private val github: GitHubService.GitHub by lazy {
-            retrofit.create(GitHubService.GitHub::class.java)
+        private val github by lazy {
+            GitHubService.github
         }
 
         fun contributor(owner: String, repo: String): Flowable<List<Contributor>?> {
