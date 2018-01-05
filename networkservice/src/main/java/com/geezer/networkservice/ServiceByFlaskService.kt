@@ -11,6 +11,12 @@ import retrofit2.http.Path
  * Created by geezer. on 05/01/2018.
  */
 class ServiceByFlaskService {
+
+    enum class ResultCode(val code: Int) {
+        SUCCESS(0)
+    }
+
+
     companion object {
         val SERVICE_BY_FLASK_URL = "http://10.0.2.2:5000"
 

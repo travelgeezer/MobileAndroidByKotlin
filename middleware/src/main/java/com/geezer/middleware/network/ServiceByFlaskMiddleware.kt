@@ -29,7 +29,7 @@ class ServiceByFlaskMiddleware {
 
         private fun <T> filterResultCode(model: JSONModel<T>?): T {
             return when (model?.code) {
-                200 -> model.data
+                ServiceByFlaskService.ResultCode.SUCCESS.code -> model.data
                 else -> throw ResultException(model?.info ?: "Unexpected response: $model")
             }
         }
