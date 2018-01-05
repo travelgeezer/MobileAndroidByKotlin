@@ -28,16 +28,8 @@ class MainActivity : AppCompatActivity() {
         sample_text.setOnClickListener {
             ServiceByFlaskMiddleware
                     .responseDataFormat("call SImpleServiceMiddleware")
-                    .subscribe {
-                        when (it?.code) {
-                            200 -> {
-                                sample_text.text = it.data
-                            }
-                            else -> {
-                                sample_text.text = it?.info
-                            }
-                        }
-                    }
+                    .subscribe({ sample_text.text = it },
+                            { sample_text.text = it.message })
         }
 
     }

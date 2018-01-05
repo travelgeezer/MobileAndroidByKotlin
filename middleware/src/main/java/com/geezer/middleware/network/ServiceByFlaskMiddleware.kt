@@ -18,18 +18,28 @@ class ServiceByFlaskMiddleware {
             ServiceByFlaskService.serviceByFlask
         }
 
-        fun responseDataFormat(data: String): Flowable<JSONModel<String>?> {
+        fun responseDataFormat(data: String): Flowable<String> {
             return rx(Callable {
                 val call = serviceByFlask.responseDataFormat(data)
                 call.execute().body()
             })
         }
 
+        class ResultException(message: String) : Exception(message)
 
-        private fun <T> rx(callable: Callable<T>): Flowable<T> {
+        private fun <T> filterResultCode(model: JSONModel<T>?): T {
+            return when (model?.code) {
+                200 -> model.data
+                else -> throw ResultException(model?.info ?: "Unexpected response: $model")
+            }
+        }
+
+        private fun <T> rx(callable: Callable<JSONModel<T>?>): Flowable<T> {
             return Flowable.fromCallable(callable)
+                    .map { filterResultCode(it) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+
         }
     }
 }
