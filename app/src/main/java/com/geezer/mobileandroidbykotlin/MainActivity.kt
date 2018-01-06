@@ -3,7 +3,6 @@ package com.geezer.mobileandroidbykotlin
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.geezer.middleware.network.servicebyflask.ServiceByFlaskMiddleware
-import com.geezer.middleware.network.servicebyflask.ServiceByFlaskMiddlewareHelper
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         register.setOnClickListener {
             ServiceByFlaskMiddleware
                     .register(name.text.toString().trim(), account.text.toString().trim(), password.text.toString().trim())
-                    .subscribe({ sample_text.text = it.toString() }, { sample_text.text = ServiceByFlaskMiddlewareHelper.handleError(it).toString() })
+                    .subscribe({ sample_text.text = it.toString() }, { sample_text.text = ServiceByFlaskMiddleware.helper.handleError(it).toString() })
         }
     }
 
