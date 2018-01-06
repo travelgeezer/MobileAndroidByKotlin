@@ -10,7 +10,7 @@ import android.util.Log
 class Console {
     companion object {
 
-        const val TAG = "Console"
+        private const val TAG = "Console"
 
         fun log(tag: String = TAG, message: String = "") {
             if (BuildConfig.DEBUG) {
