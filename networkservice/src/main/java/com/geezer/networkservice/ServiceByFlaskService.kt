@@ -18,7 +18,7 @@ class ServiceByFlaskService {
 
 
     companion object {
-        val SERVICE_BY_FLASK_URL = "http://10.0.2.2:5000"
+        private val SERVICE_BY_FLASK_URL = "http://10.0.2.2:5000"
 
         private val retrofit by lazy {
             Retrofit.Builder()
@@ -27,7 +27,7 @@ class ServiceByFlaskService {
                     .build()
         }
 
-        val serviceByFlask by lazy {
+        val serviceByFlask: ServiceByFlask by lazy {
             retrofit.create(ServiceByFlaskService.ServiceByFlask::class.java)
         }
 

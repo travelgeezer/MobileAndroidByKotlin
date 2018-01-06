@@ -12,7 +12,7 @@ import retrofit2.http.Path
  */
 class GitHubService {
     companion object {
-        val API_URL = "https://api.github.com"
+        private val API_URL = "https://api.github.com"
 
         private val retrofit: Retrofit by lazy {
             Retrofit.Builder()
@@ -21,7 +21,7 @@ class GitHubService {
                     .build()
         }
 
-        val github: GitHubService.GitHub by lazy {
+        val github: GitHub by lazy {
             retrofit.create(GitHubService.GitHub::class.java)
         }
     }
