@@ -1,5 +1,6 @@
 package com.geezer.middleware.network.servicebyflask
 
+import com.geezer.console.Console
 import com.geezer.servicebyflaskmodels.JSONModel
 import com.google.gson.JsonSyntaxException
 import retrofit2.Response
@@ -10,8 +11,21 @@ import java.net.SocketTimeoutException
  */
 class ServiceByFlaskMiddlewareHelper {
     companion object {
+        private const val TAG = "ServiceByFlaskMiddlewareHelper"
+        /**
+         * handle custom error code
+         */
+        private fun responseErrorHandle(code: Int): Exception {
+            Console.error(TAG, "responseErrorHandle( code = $code )")
+            return ResultException(HttpError.UNKNOWN_ERROR)
 
-        private fun resultErrorHandle(code: Int?): Exception {
+        }
+
+        /**
+         * handle service error code
+         */
+        private fun httpErrorHandle(code: Int): Exception {
+            Console.error(TAG, "httpErrorHandle( code = $code )")
             return when (code) {
                 HttpError.SERVER_ERROR.code -> ResultException(HttpError.SERVER_ERROR)
                 HttpError.TIME_ERROR.code -> ResultException(HttpError.TIME_ERROR)
@@ -23,27 +37,25 @@ class ServiceByFlaskMiddlewareHelper {
         }
 
         private fun <T> filterJSONModel(model: JSONModel<T>): T {
+            Console.log(TAG, "model: $model")
             if (model.isSuccessful) {
                 return model.data
             }
-            throw resultErrorHandle(model.code)
+            throw responseErrorHandle(model.code)
         }
 
         fun <T> filterResponse(response: Response<JSONModel<T>>): T {
+            Console.log(TAG, "response.isSuccessful: ${response.isSuccessful} \n response.code: ${response.code()}}")
             if (response.isSuccessful) {
                 return filterJSONModel(response.body()!!)
             }
-            throw ServiceByFlaskMiddlewareHelper.resultErrorHandle(response.code())
+            throw httpErrorHandle(response.code())
         }
 
         fun handleError(error: Throwable): HttpError {
             return when (error) {
 
-                is SocketTimeoutException -> {
-                    val timeOut = HttpError.TIME_ERROR
-                    timeOut.message = error.message ?: ""
-                    timeOut
-                }
+                is ResultException -> error.httpError
 
                 is JsonSyntaxException -> {
                     val parseError = HttpError.PARSE_ERROR
@@ -51,9 +63,11 @@ class ServiceByFlaskMiddlewareHelper {
                     parseError
                 }
 
-                is NullPointerException -> HttpError.NOT_FOUND
-
-                is ResultException -> error.httpError
+                is SocketTimeoutException -> {
+                    val timeOut = HttpError.TIME_ERROR
+                    timeOut.message = error.message ?: ""
+                    timeOut
+                }
 
                 else -> HttpError.UNKNOWN_ERROR
             }
