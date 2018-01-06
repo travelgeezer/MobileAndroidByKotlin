@@ -13,7 +13,16 @@ enum class HttpError(val code: Int, val description: String) {
     TIME_ERROR(504, "time out"),
     SERVER_UNAVAILABLE(503, " Service Unavailable"),
     BAD_REQUEST(400, "Bad Request"),
-    NOT_FOUND(404, "Not Found");
+    NOT_FOUND(404, "Not Found"),
+
+
+    PARAMS_ERROR(2, "Params error");
 
     var message: String = ""
+
+    override fun toString(): String {
+        return "HttpError(code=$code, description='$description', message='$message')"
+    }
+
+
 }

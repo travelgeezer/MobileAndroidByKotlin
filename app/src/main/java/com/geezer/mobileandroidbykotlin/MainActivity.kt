@@ -2,10 +2,8 @@ package com.geezer.mobileandroidbykotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import com.geezer.middleware.network.github.GithubMiddleware
-import com.geezer.middleware.network.servicebyflask.ServiceByFlaskMiddlewareHelper
 import com.geezer.middleware.network.servicebyflask.ServiceByFlaskMiddleware
+import com.geezer.middleware.network.servicebyflask.ServiceByFlaskMiddlewareHelper
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,27 +15,11 @@ class MainActivity : AppCompatActivity() {
         // Example of a call to a native method
         sample_text.text = stringFromJNI()
 
-
-        GithubMiddleware
-                .contributor("square", "retrofit")
-                .subscribe {
-                    it?.forEach {
-                        Log.d("MainActivity", "login: ${it.login}  contributors: ${it.contributor}")
-                    }
-                }
-
-        sample_text.setOnClickListener {
+        register.setOnClickListener {
             ServiceByFlaskMiddleware
-                    .responseDataFormat("call SImpleServiceMiddleware")
-                    .subscribe({ sample_text.text = it },
-                            {
-                                it.printStackTrace()
-                                val handleError = ServiceByFlaskMiddlewareHelper.handleError(it)
-                                sample_text.text = "handleError.code: ${handleError.code}\n handleError.description: ${handleError.description} \n handleError.message: ${handleError.message}\n"
-                            })
-
+                    .register(name.text.toString().trim(), account.text.toString().trim(), password.text.toString().trim())
+                    .subscribe({ sample_text.text = it.toString() }, { sample_text.text = ServiceByFlaskMiddlewareHelper.handleError(it).toString() })
         }
-
     }
 
 

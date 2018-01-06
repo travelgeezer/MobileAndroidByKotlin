@@ -1,11 +1,11 @@
 package com.geezer.networkservice
 
 import com.geezer.servicebyflaskmodels.JSONModel
+import com.geezer.servicebyflaskmodels.UserModel
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.*
 
 /**
  * Created by geezer. on 05/01/2018.
@@ -31,5 +31,9 @@ class ServiceByFlaskService {
     interface ServiceByFlask {
         @GET("/api/v1/response_data_format/{data}")
         fun responseDataFormat(@Path("data") data: String): Call<JSONModel<String>>
+
+        @Headers("Content-Type: application/json")
+        @POST("/api/v1/register")
+        fun register(@Body body: Map<String, String>): Call<JSONModel<UserModel>>
     }
 }

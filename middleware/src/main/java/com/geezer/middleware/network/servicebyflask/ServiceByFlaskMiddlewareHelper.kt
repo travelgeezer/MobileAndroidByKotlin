@@ -15,10 +15,16 @@ class ServiceByFlaskMiddlewareHelper {
         /**
          * handle custom error code
          */
-        private fun responseErrorHandle(code: Int): Exception {
-            Console.error(TAG, "responseErrorHandle( code = $code )")
-            return ResultException(HttpError.UNKNOWN_ERROR)
-
+        private fun <T> responseErrorHandle(model: JSONModel<T>): Exception {
+            Console.error(TAG, "responseErrorHandle( code = ${model.code} )")
+            return when (model.code) {
+                HttpError.PARAMS_ERROR.code -> {
+                    val httpError = HttpError.PARAMS_ERROR
+                    httpError.message = model.info
+                    ResultException(httpError)
+                }
+                else -> ResultException(HttpError.UNKNOWN_ERROR)
+            }
         }
 
         /**
@@ -41,7 +47,7 @@ class ServiceByFlaskMiddlewareHelper {
             if (model.isSuccessful) {
                 return model.data
             }
-            throw responseErrorHandle(model.code)
+            throw responseErrorHandle(model)
         }
 
         fun <T> filterResponse(response: Response<JSONModel<T>>): T {
