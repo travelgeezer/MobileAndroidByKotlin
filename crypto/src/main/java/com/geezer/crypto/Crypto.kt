@@ -5,11 +5,11 @@ package com.geezer.crypto
  */
 class Crypto {
     companion object {
-        fun encrypto(message: String): String {
+        fun encrypt(message: String): String {
             return message
         }
 
-        fun decrypto(ct: String): String {
+        fun decrypt(ct: String): String {
             return ct
         }
     }

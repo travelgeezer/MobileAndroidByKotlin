@@ -7,10 +7,10 @@ import com.geezer.crypto.Crypto
  */
 class ServiceByFlaskHelper {
     fun encrypt(message: String): String {
-        return Crypto.encrypto(message)
+        return Crypto.encrypt(message)
     }
 
     fun decrypt(ct: String): String {
-        return Crypto.decrypto(ct)
+        return Crypto.decrypt(ct)
     }
 }
