@@ -1,1 +1,1 @@
-include ':app', ':networkservice', ':middleware', ':githubmodels', ':servicebyflaskmodels', ':console'
+include ':app', ':networkservice', ':middleware', ':githubmodels', ':servicebyflaskmodels', ':console', ':crypto'

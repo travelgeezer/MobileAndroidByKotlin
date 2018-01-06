@@ -26,6 +26,10 @@ class ServiceByFlaskService {
             retrofit.create(ServiceByFlask::class.java)
         }
 
+        val serviceByFlaskHelper: ServiceByFlaskHelper by lazy {
+            ServiceByFlaskHelper()
+        }
+
     }
 
     interface ServiceByFlask {
