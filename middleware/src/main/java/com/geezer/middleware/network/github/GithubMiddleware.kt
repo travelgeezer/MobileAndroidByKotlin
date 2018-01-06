@@ -1,7 +1,7 @@
 package com.geezer.middleware.network.github
 
 import com.geezer.githubmodels.Contributor
-import com.geezer.networkservice.GitHubService
+import com.geezer.networkservice.github.GitHubService
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

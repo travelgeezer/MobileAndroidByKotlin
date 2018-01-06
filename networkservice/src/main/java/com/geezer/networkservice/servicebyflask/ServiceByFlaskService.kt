@@ -1,4 +1,4 @@
-package com.geezer.networkservice
+package com.geezer.networkservice.servicebyflask
 
 import com.geezer.servicebyflaskmodels.JSONModel
 import com.geezer.servicebyflaskmodels.UserModel
@@ -17,13 +17,13 @@ class ServiceByFlaskService {
 
         private val retrofit by lazy {
             Retrofit.Builder()
-                    .baseUrl(ServiceByFlaskService.SERVICE_BY_FLASK_URL)
+                    .baseUrl(SERVICE_BY_FLASK_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
         }
 
         val serviceByFlask: ServiceByFlask by lazy {
-            retrofit.create(ServiceByFlaskService.ServiceByFlask::class.java)
+            retrofit.create(ServiceByFlask::class.java)
         }
 
     }

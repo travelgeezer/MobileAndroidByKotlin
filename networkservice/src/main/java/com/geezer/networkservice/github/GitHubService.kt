@@ -1,4 +1,4 @@
-package com.geezer.networkservice
+package com.geezer.networkservice.github
 
 import com.geezer.githubmodels.Contributor
 import retrofit2.Call
@@ -16,13 +16,13 @@ class GitHubService {
 
         private val retrofit: Retrofit by lazy {
             Retrofit.Builder()
-                    .baseUrl(GitHubService.API_URL)
+                    .baseUrl(API_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
         }
 
         val github: GitHub by lazy {
-            retrofit.create(GitHubService.GitHub::class.java)
+            retrofit.create(GitHub::class.java)
         }
     }
 

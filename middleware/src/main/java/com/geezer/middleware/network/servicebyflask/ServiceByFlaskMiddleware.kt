@@ -1,6 +1,6 @@
 package com.geezer.middleware.network.servicebyflask
 
-import com.geezer.networkservice.ServiceByFlaskService
+import com.geezer.networkservice.servicebyflask.ServiceByFlaskService
 import com.geezer.servicebyflaskmodels.JSONModel
 import com.geezer.servicebyflaskmodels.UserModel
 import io.reactivex.Flowable
