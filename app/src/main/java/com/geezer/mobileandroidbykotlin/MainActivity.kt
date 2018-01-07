@@ -15,8 +15,12 @@ class MainActivity : AppCompatActivity() {
         sample_text.text = stringFromJNI()
 
         register.setOnClickListener {
+            //            ServiceByFlaskMiddleware
+//                    .register(name.text.toString().trim(), account.text.toString().trim(), password.text.toString().trim())
+//                    .subscribe({ sample_text.text = it.toString() }, { sample_text.text = ServiceByFlaskMiddleware.helper.handleError(it).toString() })
+            val key = ServiceByFlaskMiddleware.serviceHelper.generateAESKey()
             ServiceByFlaskMiddleware
-                    .register(name.text.toString().trim(), account.text.toString().trim(), password.text.toString().trim())
+                    .testRsaPublicKeyDecode(key, name.text.toString().trim())
                     .subscribe({ sample_text.text = it.toString() }, { sample_text.text = ServiceByFlaskMiddleware.helper.handleError(it).toString() })
         }
     }

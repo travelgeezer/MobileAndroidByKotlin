@@ -61,214 +61,224 @@ class RSA {
                 "GGFROgWYq4sohf2tY/q221xwJtIZ5zA5J0IWSv0YRvtRW2ypNVqtFEbP4Tg9JSf8\n" +
                 "lDAM79iY5PbQi1WfLhsrSrehKhPLU5c+H1iUREIjoy4aDPwLd3YbzfJzIxHXpRpF\n" +
                 "eSil/yDHxrjlnw3j5/+OQ0ihEw=="
+    }
 
-        fun genKeyPair() {
-            var keyPairGen: KeyPairGenerator? = null
-            try {
-                keyPairGen = KeyPairGenerator.getInstance("RSA")
-            } catch (e: NoSuchAlgorithmException) {
-                e.printStackTrace()
-            }
-            keyPairGen?.initialize(1024, SecureRandom())
-            val keyPair = keyPairGen?.generateKeyPair()
-            val privateKey = keyPair?.private
-            val publicKey = keyPair?.public
+    fun genKeyPair() {
+        var keyPairGen: KeyPairGenerator? = null
+        try {
+            keyPairGen = KeyPairGenerator.getInstance("RSA")
+        } catch (e: NoSuchAlgorithmException) {
+            e.printStackTrace()
         }
+        keyPairGen?.initialize(1024, SecureRandom())
+        val keyPair = keyPairGen?.generateKeyPair()
+        val privateKey = keyPair?.private
+        val publicKey = keyPair?.public
+    }
 
-        /**
-         * Load public key from InputString
-         */
-        @Throws(Exception::class)
-        fun loadPublicKey(inputStream: InputStream) {
-            try {
-                val br = BufferedReader(InputStreamReader(inputStream))
-                var readLine: String? = br.readLine()
-                val sb = StringBuilder()
-                while (readLine != null) {
-                    if (readLine!![0] == '-') {
-                        readLine = br.readLine()
-                        continue
-                    } else {
-                        sb.append(readLine)
-                        sb.append('\r')
-                    }
+    /**
+     * Load public key from InputString
+     */
+    @Throws(Exception::class)
+    fun loadPublicKey(inputStream: InputStream) {
+        try {
+            val br = BufferedReader(InputStreamReader(inputStream))
+            var readLine: String? = br.readLine()
+            val sb = StringBuilder()
+            while (readLine != null) {
+                if (readLine!![0] == '-') {
                     readLine = br.readLine()
+                    continue
+                } else {
+                    sb.append(readLine)
+                    sb.append('\r')
                 }
-                loadPublicKey(sb.toString())
-            } catch (e: IOException) {
-                throw  Exception("Public key data flow reads errors")
-            } catch (e: NullPointerException) {
-                throw Exception("The public key input stream is empty")
+                readLine = br.readLine()
             }
+            loadPublicKey(sb.toString())
+        } catch (e: IOException) {
+            throw  Exception("Public key data flow reads errors")
+        } catch (e: NullPointerException) {
+            throw Exception("The public key input stream is empty")
         }
+    }
 
-        /**
-         * Load public key from string
-         */
-        @Throws(Exception::class)
-        fun loadPublicKey(publicKeyStr: String): PublicKey {
-            try {
-                val buffer = Base64.decode(publicKeyStr, Base64.DEFAULT)
-                val keyFactory = KeyFactory.getInstance("RSA")
-                val keySpec = X509EncodedKeySpec(buffer)
-                return keyFactory.generatePublic(keySpec)
-            } catch (e: NoSuchAlgorithmException) {
-                throw Exception("No algorithm was found")
-            } catch (e: InvalidKeySpecException) {
-                throw Exception("The public key of illegal")
-            } catch (e: NullPointerException) {
-                throw Exception("The public key data is empty")
-            }
+    /**
+     * Load public key from string
+     */
+    @Throws(Exception::class)
+    fun loadPublicKey(publicKeyStr: String): PublicKey {
+        try {
+            val buffer = Base64.decode(publicKeyStr, Base64.DEFAULT)
+            val keyFactory = KeyFactory.getInstance("RSA")
+            val keySpec = X509EncodedKeySpec(buffer)
+            return keyFactory.generatePublic(keySpec)
+        } catch (e: NoSuchAlgorithmException) {
+            throw Exception("No algorithm was found")
+        } catch (e: InvalidKeySpecException) {
+            throw Exception("The public key of illegal")
+        } catch (e: NullPointerException) {
+            throw Exception("The public key data is empty")
         }
+    }
 
-        /**
-         * Load private key from InputStream
-         */
-        @Throws(Exception::class)
-        fun loadPrivateKey(inputStream: InputStream) {
-            try {
-                val br = BufferedReader(InputStreamReader(inputStream))
-                var readLine: String? = br.readLine()
-                val sb = StringBuilder()
-                while (readLine != null) {
-                    if (readLine!![0] == '-') {
-                        readLine = br.readLine()
-                        continue
-                    } else {
-                        sb.append(readLine)
-                        sb.append('\r')
-                    }
+    /**
+     * Load private key from InputStream
+     */
+    @Throws(Exception::class)
+    fun loadPrivateKey(inputStream: InputStream) {
+        try {
+            val br = BufferedReader(InputStreamReader(inputStream))
+            var readLine: String? = br.readLine()
+            val sb = StringBuilder()
+            while (readLine != null) {
+                if (readLine!![0] == '-') {
                     readLine = br.readLine()
+                    continue
+                } else {
+                    sb.append(readLine)
+                    sb.append('\r')
                 }
-                loadPrivateKey(sb.toString())
-            } catch (e: IOException) {
-                throw  Exception("Public key data flow reads errors")
-            } catch (e: NullPointerException) {
-                throw Exception("The public key input stream is empty")
+                readLine = br.readLine()
             }
+            loadPrivateKey(sb.toString())
+        } catch (e: IOException) {
+            throw  Exception("Public key data flow reads errors")
+        } catch (e: NullPointerException) {
+            throw Exception("The public key input stream is empty")
         }
+    }
 
-        /**
-         * Load private key from String
-         */
-        @Throws(Exception::class)
-        fun loadPrivateKey(privateKeyStr: String): PrivateKey {
-            try {
-                val buffer = Base64.decode(privateKeyStr, Base64.DEFAULT)
-                val keySpec = PKCS8EncodedKeySpec(buffer)
-                val keyFactory = KeyFactory.getInstance("RSA")
-                return keyFactory.generatePrivate(keySpec)
-            } catch (e: NoSuchAlgorithmException) {
-                throw Exception("No algorithm was found")
-            } catch (e: InvalidKeySpecException) {
-                throw Exception("The public key of illegal")
-            } catch (e: NullPointerException) {
-                throw Exception("The public key data is empty")
-            }
+    /**
+     * Load private key from String
+     */
+    @Throws(Exception::class)
+    fun loadPrivateKey(privateKeyStr: String): PrivateKey {
+        try {
+            val buffer = Base64.decode(privateKeyStr, Base64.DEFAULT)
+            val keySpec = PKCS8EncodedKeySpec(buffer)
+            val keyFactory = KeyFactory.getInstance("RSA")
+            return keyFactory.generatePrivate(keySpec)
+        } catch (e: NoSuchAlgorithmException) {
+            throw Exception("No algorithm was found")
+        } catch (e: InvalidKeySpecException) {
+            throw Exception("The public key of illegal")
+        } catch (e: NullPointerException) {
+            throw Exception("The public key data is empty")
         }
+    }
 
-        @Throws(Exception::class)
-        fun encrypt(publicKeyStr: String, data: String): String? {
-            try {
-                val buffer = Base64.decode(publicKeyStr, Base64.DEFAULT)
-                val keyFactory = KeyFactory.getInstance("RSA")
-                val keySpec = X509EncodedKeySpec(buffer)
-                val publicKey = keyFactory.generatePublic(keySpec) as RSAPublicKey
-                val cipher = Cipher.getInstance(ALGORITHM)
-                cipher.init(Cipher.ENCRYPT_MODE, publicKey)
-                val output = cipher.doFinal(data.toByteArray())
-                return Base64.encodeToString(output, Base64.NO_WRAP)
-            } catch (e: NoSuchAlgorithmException) {
-                throw Exception("No algorithm was found")
-            } catch (e: NoSuchPaddingException) {
-                e.printStackTrace()
-                return null
-            } catch (e: InvalidKeyException) {
-                throw Exception("Encryption public key is illegal, please check")
-            } catch (e: IllegalBlockSizeException) {
-                throw Exception("Illegal length")
-            } catch (e: BadPaddingException) {
-                throw Exception("The plaintext data has been damaged")
-            }
+    @Throws(Exception::class)
+    fun encrypt(publicKeyStr: String, data: String): String? {
+        try {
+            val buffer = Base64.decode(publicKeyStr, Base64.DEFAULT)
+            val keyFactory = KeyFactory.getInstance("RSA")
+            val keySpec = X509EncodedKeySpec(buffer)
+            val publicKey = keyFactory.generatePublic(keySpec) as RSAPublicKey
+            val cipher = Cipher.getInstance(ALGORITHM)
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey)
+            val output = cipher.doFinal(data.toByteArray())
+            return Base64.encodeToString(output, Base64.NO_WRAP)
+        } catch (e: NoSuchAlgorithmException) {
+            throw Exception("No algorithm was found")
+        } catch (e: NoSuchPaddingException) {
+            e.printStackTrace()
+            return null
+        } catch (e: InvalidKeyException) {
+            throw Exception("Encryption public key is illegal, please check")
+        } catch (e: IllegalBlockSizeException) {
+            throw Exception("Illegal length")
+        } catch (e: BadPaddingException) {
+            throw Exception("The plaintext data has been damaged")
         }
+    }
 
-        /**
-         * Encryption process
-         */
-        @Throws(Exception::class)
-        fun encrypt(publicKey: RSAPublicKey?, plainTextData: ByteArray): ByteArray? {
-            if (publicKey == null) {
-                throw Exception("Encryption public key is empty, please set")
-            }
-            try {
-                val cipher = Cipher.getInstance(ALGORITHM)
-                cipher.init(Cipher.ENCRYPT_MODE, publicKey)
-                val output = cipher.doFinal(plainTextData)
-                return output
-            } catch (e: NoSuchAlgorithmException) {
-                throw Exception("No algorithm was found")
-            } catch (e: NoSuchPaddingException) {
-                e.printStackTrace()
-                return null
-            } catch (e: InvalidKeyException) {
-                throw Exception("Encryption public key is illegal, please check")
-            } catch (e: IllegalBlockSizeException) {
-                throw Exception("Illegal length")
-            } catch (e: BadPaddingException) {
-                throw Exception("The plaintext data has been damaged")
-            }
+    @Throws(Exception::class)
+    fun encrypt(data: String): String? {
+        return encrypt(DEFAULT_PUBLIC_KEY, data)
+    }
+
+    /**
+     * Encryption process
+     */
+    @Throws(Exception::class)
+    fun encrypt(publicKey: RSAPublicKey?, plainTextData: ByteArray): ByteArray? {
+        if (publicKey == null) {
+            throw Exception("Encryption public key is empty, please set")
         }
-
-        /**
-         * Decryption process
-         */
-        @Throws(Exception::class)
-        fun decrypt(privateKey: RSAPrivateKey, cipherData: String): String? {
-            if (privateKey == null) {
-                throw Exception("Decryption private key is empty, please set")
-            }
-            try {
-                val cipher = Cipher.getInstance(ALGORITHM)
-                cipher.init(Cipher.DECRYPT_MODE, privateKey)
-                val buffer = Base64.decode(cipherData.toByteArray(), Base64.NO_WRAP)
-                val output = cipher.doFinal(buffer)
-                val hexStr = byteArrayToString(output)
-                return hexStr2Str(hexStr)
-            } catch (e: NoSuchAlgorithmException) {
-                throw Exception("No algorithm was found")
-            } catch (e: NoSuchPaddingException) {
-                e.printStackTrace()
-                return null
-            } catch (e: InvalidKeyException) {
-                throw Exception("Encryption public key is illegal, please check")
-            } catch (e: IllegalBlockSizeException) {
-                throw Exception("Illegal length")
-            } catch (e: BadPaddingException) {
-                throw Exception("The plaintext data has been damaged")
-            }
+        try {
+            val cipher = Cipher.getInstance(ALGORITHM)
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey)
+            val output = cipher.doFinal(plainTextData)
+            return output
+        } catch (e: NoSuchAlgorithmException) {
+            throw Exception("No algorithm was found")
+        } catch (e: NoSuchPaddingException) {
+            e.printStackTrace()
+            return null
+        } catch (e: InvalidKeyException) {
+            throw Exception("Encryption public key is illegal, please check")
+        } catch (e: IllegalBlockSizeException) {
+            throw Exception("Illegal length")
+        } catch (e: BadPaddingException) {
+            throw Exception("The plaintext data has been damaged")
         }
+    }
 
-        private fun byteArrayToString(data: ByteArray): String {
-            val stringBuilder = StringBuilder()
-            for (i in data.indices) {
-                stringBuilder.append(HEX_CHAR[(data[i] and (0xf0).toByte()).toInt().ushr(4)])
-                stringBuilder.append(HEX_CHAR[(data[i] and (0x0f).toByte()).toInt()])
-            }
-            return stringBuilder.toString()
+    /**
+     * Decryption process
+     */
+    @Throws(Exception::class)
+    fun decrypt(privateKey: RSAPrivateKey, cipherData: String): String? {
+        if (privateKey == null) {
+            throw Exception("Decryption private key is empty, please set")
         }
-
-        private fun hexStr2Str(hexStr: String): String {
-            val hexs = hexStr.toCharArray()
-            val bytes = ByteArray(hexStr.length / 2)
-            var n: Int
-            for (i in bytes.indices) {
-                n = HEX_CHAR.indexOf(hexs[2 * i]) * 16
-                n += HEX_CHAR.indexOf(hexs[2 * i + 1])
-                bytes[i] = (n and 0xff).toByte()
-            }
-            return String(bytes)
+        try {
+            val cipher = Cipher.getInstance(ALGORITHM)
+            cipher.init(Cipher.DECRYPT_MODE, privateKey)
+            val buffer = Base64.decode(cipherData.toByteArray(), Base64.NO_WRAP)
+            val output = cipher.doFinal(buffer)
+            val hexStr = byteArrayToString(output)
+            return hexStr2Str(hexStr)
+        } catch (e: NoSuchAlgorithmException) {
+            throw Exception("No algorithm was found")
+        } catch (e: NoSuchPaddingException) {
+            e.printStackTrace()
+            return null
+        } catch (e: InvalidKeyException) {
+            throw Exception("Encryption public key is illegal, please check")
+        } catch (e: IllegalBlockSizeException) {
+            throw Exception("Illegal length")
+        } catch (e: BadPaddingException) {
+            throw Exception("The plaintext data has been damaged")
         }
+    }
 
+    @Throws(Exception::class)
+    fun decrypt(cipherData: String): String? {
+        val privateKey = loadPrivateKey(DEFAULT_PRIVATE_KEY) as RSAPrivateKey
+        return decrypt(privateKey, cipherData)
+    }
+
+    private fun byteArrayToString(data: ByteArray): String {
+        val stringBuilder = StringBuilder()
+        for (i in data.indices) {
+            stringBuilder.append(HEX_CHAR[(data[i] and (0xf0).toByte()).toInt().ushr(4)])
+            stringBuilder.append(HEX_CHAR[(data[i] and (0x0f).toByte()).toInt()])
+        }
+        return stringBuilder.toString()
+    }
+
+    private fun hexStr2Str(hexStr: String): String {
+        val hexs = hexStr.toCharArray()
+        val bytes = ByteArray(hexStr.length / 2)
+        var n: Int
+        for (i in bytes.indices) {
+            n = HEX_CHAR.indexOf(hexs[2 * i]) * 16
+            n += HEX_CHAR.indexOf(hexs[2 * i + 1])
+            bytes[i] = (n and 0xff).toByte()
+        }
+        return String(bytes)
     }
 
 }

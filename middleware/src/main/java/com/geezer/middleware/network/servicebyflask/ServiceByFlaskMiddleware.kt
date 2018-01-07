@@ -39,7 +39,7 @@ class ServiceByFlaskMiddleware {
 
         fun testRsaPublicKeyDecode(key: String, message: String): Flowable<String> {
             val map = hashMapOf<String, String>()
-            map.put("key", serviceHelper.encrypt(key))
+            map.put("key", serviceHelper.encrypt_rsa(key))
             val value = serviceHelper.encrypt_aes(message, key)
             map.put("message", value)
             return rx({ serviceByFlask.testRsa(map).execute() })
@@ -49,7 +49,7 @@ class ServiceByFlaskMiddleware {
             val hashMap = HashMap<String, String>()
             hashMap.put("name", name)
             hashMap.put("account", account)
-            hashMap.put("password", serviceHelper.encrypt(password))
+            hashMap.put("password", serviceHelper.encrypt_rsa(password))
             return rx({ serviceByFlask.register(hashMap).execute() })
         }
 
