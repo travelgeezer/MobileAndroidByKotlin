@@ -24,7 +24,7 @@ class ServiceByFlaskMiddleware {
             ServiceByFlaskService.serviceByFlask
         }
 
-        private val serviceHelper by lazy {
+        val serviceHelper by lazy {
             ServiceByFlaskService.serviceByFlaskHelper
         }
 
@@ -35,6 +35,14 @@ class ServiceByFlaskMiddleware {
 
         fun responseDataFormat(data: String): Flowable<String> {
             return rx({ serviceByFlask.responseDataFormat(data).execute() })
+        }
+
+        fun testRsaPublicKeyDecode(key: String, message: String): Flowable<String> {
+            val map = hashMapOf<String, String>()
+            map.put("key", serviceHelper.encrypt(key))
+            val value = serviceHelper.encrypt_aes(message, key)
+            map.put("message", value)
+            return rx({ serviceByFlask.testRsa(map).execute() })
         }
 
         fun register(name: String, account: String, password: String): Flowable<UserModel> {

@@ -8,6 +8,18 @@ import java.security.interfaces.RSAPrivateKey
  */
 class Crypto {
     companion object {
+        val AES by lazy {
+            AES()
+        }
+
+        fun encrypt_aes(message: String, key: String): String {
+            return AES.encrypt(message, key)
+        }
+
+        fun decrypt_aes(message: String, key: String): String {
+            return AES.decrypt(message, key)
+        }
+
         fun encrypt(message: String): String {
             val encrypt = RSA.encrypt(RSA.DEFAULT_PUBLIC_KEY, message)
             Log.d("Crypto", "encrypt: $encrypt")

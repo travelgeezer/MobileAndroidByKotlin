@@ -37,6 +37,10 @@ class ServiceByFlaskService {
         fun responseDataFormat(@Path("data") data: String): Call<JSONModel<String>>
 
         @Headers("Content-Type: application/json")
+        @POST("/api/v1/test_rsa/")
+        fun testRsa(@Body bod: Map<String, String>): Call<JSONModel<String>>
+
+        @Headers("Content-Type: application/json")
         @POST("/api/v1/register")
         fun register(@Body body: Map<String, String>): Call<JSONModel<UserModel>>
     }
