@@ -36,6 +36,7 @@ dependencies {
     api 'io.reactivex.rxjava2:rxandroid:2.0.1'
     api project(':networkservice')
     implementation project(':console')
+    implementation project(':crypto')
 }
 repositories {
     mavenCentral()

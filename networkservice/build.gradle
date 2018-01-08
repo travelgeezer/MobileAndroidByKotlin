@@ -36,7 +36,6 @@ dependencies {
     api 'com.squareup.retrofit2:converter-gson:2.3.0'
     api project(':githubmodels')
     api project(':servicebyflaskmodels')
-    implementation project(':crypto')
 }
 repositories {
     mavenCentral()

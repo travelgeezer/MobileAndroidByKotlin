@@ -2,7 +2,7 @@ package com.geezer.mobileandroidbykotlin
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.geezer.middleware.network.servicebyflask.ServiceByFlaskMiddleware
+import com.geezer.middleware.Middleware
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,10 +18,11 @@ class MainActivity : AppCompatActivity() {
             //            ServiceByFlaskMiddleware
 //                    .register(name.text.toString().trim(), account.text.toString().trim(), password.text.toString().trim())
 //                    .subscribe({ sample_text.text = it.toString() }, { sample_text.text = ServiceByFlaskMiddleware.helper.handleError(it).toString() })
-            val key = ServiceByFlaskMiddleware.serviceHelper.generateAESKey()
-            ServiceByFlaskMiddleware
-                    .testRsaPublicKeyDecode(key, name.text.toString().trim())
-                    .subscribe({ sample_text.text = it.toString() }, { sample_text.text = ServiceByFlaskMiddleware.helper.handleError(it).toString() })
+            val key = Middleware.Crpto.AES.generateKey()
+            Middleware.RequestClient
+                    .testRsaPublicKeyDecode(key ?: "", name.text.toString().trim())
+                    .subscribe({ sample_text.text = it.toString() }, { sample_text.text = Middleware.RequestClient.helper.handleError(it).toString() })
+
         }
     }
 

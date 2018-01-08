@@ -1,6 +1,7 @@
 package com.geezer.middleware.network.servicebyflask
 
 import com.geezer.console.Console
+import com.geezer.middleware.Middleware
 import com.geezer.networkservice.servicebyflask.ServiceByFlaskService
 import com.geezer.servicebyflaskmodels.JSONModel
 import com.geezer.servicebyflaskmodels.UserModel
@@ -24,42 +25,44 @@ class ServiceByFlaskMiddleware {
             ServiceByFlaskService.serviceByFlask
         }
 
-        val serviceHelper by lazy {
-            ServiceByFlaskService.serviceByFlaskHelper
-        }
-
-        val helper by lazy {
-            Helper()
-        }
+//        val serviceHelper by lazy {
+//            ServiceByFlaskService.serviceByFlaskHelper
+//        }
 
 
-        fun responseDataFormat(data: String): Flowable<String> {
-            return rx({ serviceByFlask.responseDataFormat(data).execute() })
-        }
+    }
 
-        fun testRsaPublicKeyDecode(key: String, message: String): Flowable<String> {
-            val map = hashMapOf<String, String>()
-            map.put("key", serviceHelper.encrypt_rsa(key))
-            val value = serviceHelper.encrypt_aes(message, key)
-            map.put("message", value)
-            return rx({ serviceByFlask.testRsa(map).execute() })
-        }
-
-        fun register(name: String, account: String, password: String): Flowable<UserModel> {
-            val hashMap = HashMap<String, String>()
-            hashMap.put("name", name)
-            hashMap.put("account", account)
-            hashMap.put("password", serviceHelper.encrypt_rsa(password))
-            return rx({ serviceByFlask.register(hashMap).execute() })
-        }
+    val helper by lazy {
+        Helper()
+    }
 
 
-        private fun <T> rx(callable: () -> Response<JSONModel<T>>): Flowable<T> {
-            return Flowable.fromCallable(callable)
-                    .map { helper.filterResponse(it) }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-        }
+    fun responseDataFormat(data: String): Flowable<String> {
+        return rx({ serviceByFlask.responseDataFormat(data).execute() })
+    }
+
+    fun testRsaPublicKeyDecode(key: String, message: String): Flowable<String> {
+        val map = hashMapOf<String, String>()
+        map.put("key", Middleware.Crpto.RSA.encrypt(key) ?: ""/*.encrypt_rsa(key)*/)
+        val value = Middleware.Crpto.AES.encrypt(message, key)
+        map.put("message", value)
+        return rx({ serviceByFlask.testRsa(map).execute() })
+    }
+
+    fun register(name: String, account: String, password: String): Flowable<UserModel> {
+        val hashMap = HashMap<String, String>()
+        hashMap.put("name", name)
+        hashMap.put("account", account)
+        hashMap.put("password", Middleware.Crpto.RSA.encrypt(password) ?: "")
+        return rx({ serviceByFlask.register(hashMap).execute() })
+    }
+
+
+    private fun <T> rx(callable: () -> Response<JSONModel<T>>): Flowable<T> {
+        return Flowable.fromCallable(callable)
+                .map { helper.filterResponse(it) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
     }
 
     class Helper {
