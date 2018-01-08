@@ -38,18 +38,18 @@ class ServiceByFlaskMiddleware {
 
     fun testRsaPublicKeyDecode(key: String, message: String): Flowable<String> {
         val map = hashMapOf<String, String>()
-        map.put("key", Middleware.Crpto.RSA.encrypt(key) ?: ""/*.encrypt_rsa(key)*/)
-        val value = Middleware.Crpto.AES.encrypt(message, key)
+        map.put("key", Middleware.Crypto.RSA.encrypt(key) ?: ""/*.encrypt_rsa(key)*/)
+        val value = Middleware.Crypto.AES.encrypt(message, key)
         map.put("message", value)
         return rx({ serviceByFlask.testRsa(map).execute() })
     }
 
     fun register(name: String, account: String, password: String, key: String): Flowable<UserModel> {
         val hashMap = HashMap<String, String>()
-        hashMap.put("key", Middleware.Crpto.RSA.encrypt(key) ?: "")
+        hashMap.put("key", Middleware.Crypto.RSA.encrypt(key) ?: "")
         hashMap.put("name", name)
         hashMap.put("account", account)
-        hashMap.put("password", Middleware.Crpto.AES.encrypt(password, key) ?: "")
+        hashMap.put("password", Middleware.Crypto.AES.encrypt(password, key) ?: "")
         return rx({ serviceByFlask.register(hashMap).execute() })
     }
 

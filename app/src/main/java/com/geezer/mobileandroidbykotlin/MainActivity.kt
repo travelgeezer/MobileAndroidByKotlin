@@ -15,18 +15,13 @@ class MainActivity : AppCompatActivity() {
         sample_text.text = stringFromJNI()
 
         register.setOnClickListener {
-            val key = Middleware.Crpto.AES.generateKey() ?: ""
+            val key = Middleware.Crypto.AES.generateKey() ?: ""
             Middleware.RequestClient
                     .register(name.text.toString().trim(), account.text.toString().trim(), password.text.toString().trim(), key)
                     .subscribe({ sample_text.text = it.toString() }, {
                         val message = Middleware.RequestClient.helper.handleError(it).message
-                        sample_text.text = Middleware.Crpto.AES.decrypt(message, key)
+                        sample_text.text = Middleware.Crypto.AES.decrypt(message, key)
                     })
-//            val key = Middleware.Crpto.AES.generateKey()
-//            Middleware.RequestClient
-//                    .testRsaPublicKeyDecode(key ?: "", name.text.toString().trim())
-//                    .subscribe({ sample_text.text = it.toString() }, { sample_text.text = Middleware.RequestClient.helper.handleError(it).toString() })
-
         }
     }
 

@@ -12,7 +12,7 @@ class Middleware {
             ServiceByFlaskMiddleware()
         }
 
-        val Crpto by lazy {
+        val Crypto by lazy {
             CryptoMiddleware()
         }
     }
