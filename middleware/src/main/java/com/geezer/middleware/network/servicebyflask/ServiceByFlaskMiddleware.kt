@@ -25,11 +25,6 @@ class ServiceByFlaskMiddleware {
             ServiceByFlaskService.serviceByFlask
         }
 
-//        val serviceHelper by lazy {
-//            ServiceByFlaskService.serviceByFlaskHelper
-//        }
-
-
     }
 
     val helper by lazy {
@@ -49,11 +44,12 @@ class ServiceByFlaskMiddleware {
         return rx({ serviceByFlask.testRsa(map).execute() })
     }
 
-    fun register(name: String, account: String, password: String): Flowable<UserModel> {
+    fun register(name: String, account: String, password: String, key: String): Flowable<UserModel> {
         val hashMap = HashMap<String, String>()
+        hashMap.put("key", Middleware.Crpto.RSA.encrypt(key) ?: "")
         hashMap.put("name", name)
         hashMap.put("account", account)
-        hashMap.put("password", Middleware.Crpto.RSA.encrypt(password) ?: "")
+        hashMap.put("password", Middleware.Crpto.AES.encrypt(password, key) ?: "")
         return rx({ serviceByFlask.register(hashMap).execute() })
     }
 
