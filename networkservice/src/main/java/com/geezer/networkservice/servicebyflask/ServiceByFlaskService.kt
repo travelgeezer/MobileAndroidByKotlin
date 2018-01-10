@@ -37,7 +37,11 @@ class ServiceByFlaskService {
         fun testRsa(@Body bod: Map<String, String>): Call<JSONModel<String>>
 
         @Headers("Content-Type: application/json")
-        @POST("/api/v1/register")
+        @POST("/api/v1/register/")
         fun register(@Body body: Map<String, String>): Call<JSONModel<UserModel>>
+
+        @Headers("Content-Type: application/json")
+        @POST("/api/v1/login/")
+        fun login(@Body body: Map<String, String>): Call<JSONModel<UserModel>>
     }
 }

@@ -33,7 +33,7 @@ class ServiceByFlaskMiddleware {
 
 
     fun responseDataFormat(data: String): Flowable<String> {
-        return rx({ serviceByFlask.responseDataFormat(data).execute() })
+        return rx { serviceByFlask.responseDataFormat(data).execute() }
     }
 
     fun testRsaPublicKeyDecode(key: String, message: String): Flowable<String> {
@@ -41,7 +41,7 @@ class ServiceByFlaskMiddleware {
         map.put("key", Middleware.Crypto.RSA.encrypt(key) ?: ""/*.encrypt_rsa(key)*/)
         val value = Middleware.Crypto.AES.encrypt(message, key)
         map.put("message", value)
-        return rx({ serviceByFlask.testRsa(map).execute() })
+        return rx { serviceByFlask.testRsa(map).execute() }
     }
 
     fun register(name: String, account: String, password: String, key: String): Flowable<UserModel> {
@@ -49,10 +49,17 @@ class ServiceByFlaskMiddleware {
         hashMap.put("key", Middleware.Crypto.RSA.encrypt(key) ?: "")
         hashMap.put("name", name)
         hashMap.put("account", account)
-        hashMap.put("password", Middleware.Crypto.AES.encrypt(password, key) ?: "")
-        return rx({ serviceByFlask.register(hashMap).execute() })
+        hashMap.put("password", Middleware.Crypto.AES.encrypt(password, key))
+        return rx { serviceByFlask.register(hashMap).execute() }
     }
 
+    fun login(account: String, password: String, key: String): Flowable<UserModel> {
+        val map = hashMapOf<String, String>()
+        map.put("key", Middleware.Crypto.RSA.encrypt(key) ?: "")
+        map.put("account", account)
+        map.put("password", Middleware.Crypto.AES.encrypt(password, key))
+        return rx { serviceByFlask.login(map).execute() }
+    }
 
     private fun <T> rx(callable: () -> Response<JSONModel<T>>): Flowable<T> {
         return Flowable.fromCallable(callable)

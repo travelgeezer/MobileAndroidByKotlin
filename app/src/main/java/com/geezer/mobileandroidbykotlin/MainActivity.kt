@@ -23,6 +23,16 @@ class MainActivity : AppCompatActivity() {
                         sample_text.text = Middleware.Crypto.AES.decrypt(message, key)
                     })
         }
+
+        login.setOnClickListener {
+            val key = Middleware.Crypto.AES.generateKey() ?: ""
+            Middleware.RequestClient
+                    .login(account.text.toString().trim(), password.text.toString().trim(), key)
+                    .subscribe({ sample_text.text = "${it.name}, login success!!!"}, {
+                        val message = Middleware.RequestClient.helper.handleError(it).message
+                        sample_text.text = message
+                    })
+        }
     }
 
 
